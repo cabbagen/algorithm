@@ -1,12 +1,32 @@
 package algorithm
 
-// 选择排序 ->  n * n
-func SelectSortFromSort(numbers []int) []int {
-	for i, _ := range numbers {
-		for j, _ := range numbers {
-			if numbers[i] < numbers[j] {
+// 冒泡排序 -> n * n
+func BubbleSortFromSort(numbers []int) []int {
+	for i:= 0; i < len(numbers); i++ {
+		for j := i; j < len(numbers); j++ {
+			if numbers[i] > numbers[j] {
 				numbers[i], numbers[j] = numbers[j], numbers[i]
 			}
+		}
+	}
+	return numbers
+}
+
+// 选择排序 ->  n * n
+func SelectSortFromSort(numbers []int) []int {
+	var i, j, min int
+	
+	for i = 0; i < len(numbers); i++ {
+		min = i
+		
+		for j = i; j < len(numbers); j++ {
+			if numbers[min] > numbers[j] {
+				min = j
+			}
+		}
+
+		if i != min {
+			numbers[i], numbers[min] = numbers[min], numbers[i]
 		}
 	}
 	return numbers
@@ -30,3 +50,4 @@ func QuickSortFromSort(numbers []int) []int {
 	}
 	return append(append(QuickSortFromSort(smalls), numbers[0]), QuickSortFromSort(greater)...)
 }
+

@@ -6,6 +6,7 @@ import (
 )
 
 func main() {
-	index, isExist := algorithm.DichotomyFromLookup([]int {1, 2, 6, 9, 12, 14, 91}, 1, 0, 7)
-	fmt.Printf("index: %d  result: %v \n", index, isExist)
+	result := algorithm.SelectSortFromSort([]int {1, 2, 61, 29, 121, 14, 91})
+	fmt.Printf("result: %v \n", result)
 }
+
