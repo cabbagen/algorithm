@@ -6,7 +6,10 @@ import (
 )
 
 func main() {
-	result := algorithm.SelectSortFromSort([]int {1, 2, 61, 29, 121, 14, 91})
+	var numbers []int = []int{ 1, 18, 19, 20, 21, 109, 111, 200, 302 }
+
+	result, _ := algorithm.DichotomyFromLookup(numbers, 1, 0, len(numbers))
+
 	fmt.Printf("result: %v \n", result)
 }
 

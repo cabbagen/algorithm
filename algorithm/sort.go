@@ -51,3 +51,14 @@ func QuickSortFromSort(numbers []int) []int {
 	return append(append(QuickSortFromSort(smalls), numbers[0]), QuickSortFromSort(greater)...)
 }
 
+func IsSorted(numbers []int) bool {
+	var result bool = true
+
+	for result && len(numbers) > 1 {
+		first, second := numbers[0:2][0], numbers[0:2][1]
+
+		result, numbers = second - first >= 0, numbers[1:]
+	}
+
+	return result
+}

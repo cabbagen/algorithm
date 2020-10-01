@@ -17,13 +17,14 @@ func DichotomyFromLookup(numbers []int, target, start, end int) (int, bool)  {
 	if numbers[halfIndex] == target {
 		return halfIndex, true
 	}
+	if halfIndex == start {
+		return -1, false
+	}
 	if numbers[halfIndex] < target {
 		return DichotomyFromLookup(numbers, target, halfIndex, end)
 	}
 	if numbers[halfIndex] > target {
 		return DichotomyFromLookup(numbers, target, start, halfIndex)
 	}
-
 	return -1, false
 }
-
