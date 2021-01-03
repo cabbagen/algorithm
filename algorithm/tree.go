@@ -1,17 +1,14 @@
-// 孩子双亲表示法
-
 package algorithm
 
-import "fmt"
-
 type Tree struct {
-	NodeBoxs     []TreeBox
 	RootNodeId   int
+	NodeBoxes     []TreeBox
 }
 
 type TreeBox struct {
 	Data         TreeNodeData
 	FirstNode    *TreeNode
+	ParentNode   *TreeBox
 }
 
 type TreeNodeData struct {
@@ -26,94 +23,41 @@ type TreeNode struct {
 
 func NewTree(rootId int) Tree {
 	return Tree {
-		NodeBoxs: []TreeBox {},
 		RootNodeId: rootId,
+		NodeBoxes: []TreeBox {},
 	}
 }
 
-func (t *Tree) CreateTree(datas []TreeNodeData) {	
-	var group map[int][]TreeNode = make(map[int][]TreeNode)
-	
-	for i := 0; i < len(datas); i++ {
-		node := TreeNode{ datas[i], nil }
-		
-		group[datas[i].ParentId] = append(group[datas[i].ParentId], node)
-       
-		if (len(group[datas[i].ParentId]) > 1) {
-			group[datas[i].ParentId][len(group[datas[i].ParentId]) - 2].Next = &node
+func (t *Tree) CreateTree(data []TreeNodeData) {
+	var boxes map[int]*TreeBox = make(map[int]*TreeBox)
+	var pointer map[int][]*TreeNode = make(map[int][]*TreeNode)
+
+	for i, length := 0, len(data); i < length; i++ {
+		node := TreeNode { data[i], nil }
+
+		boxes[data[i].Id] = &TreeBox {data[i], nil, nil }
+
+		if pointer[data[i].ParentId] == nil {
+			pointer[data[i].ParentId] = []*TreeNode { &node, &node }
+			continue
 		}
+		pointer[data[i].ParentId][1].Next, pointer[data[i].ParentId] = &node, []*TreeNode { pointer[data[i].ParentId][0], &node }
 	}
-	
-	fmt.Printf("group: %v\n", group)
-	
-	for j := 0; j < len(datas); j++ {
-		var firstNode *TreeNode
-		
-		if (len(group[datas[j].Id]) > 0) {
-			firstNode = &group[datas[j].Id][0]
+
+	for id, treeBox := range boxes {
+		if len(pointer[id]) > 0 {
+			treeBox.FirstNode = pointer[id][0]
 		}
-		
-		t.NodeBoxs = append(t.NodeBoxs, TreeBox { datas[j], firstNode })
+		treeBox.ParentNode = boxes[treeBox.Data.ParentId]
+		t.NodeBoxes = append(t.NodeBoxes, *treeBox)
 	}
-	
-	current := t.NodeBoxs[1].FirstNode
-	
-	fmt.Printf("current1: %v\n", *current)
-	
-	fmt.Printf("current2: %v\n", *((*current).Next))
 }
 
 func (t *Tree) ClearTree() {
-	t.NodeBoxs = []TreeBox{}
+	t.NodeBoxes = []TreeBox {}
 	t.RootNodeId = 0
 }
 
 func (t *Tree) IsEmptyTree() bool {
-	return len(t.NodeBoxs) == 0
-}
-
-func (t *Tree) GetTreeNodePaths() {
-	// var paths []int
-	
-	// current := t.NodeBoxs[1].FirstNode
-	
-	// fmt.Printf("current1: %v\n", *current)
-	
-	// fmt.Printf("current2: %v\n", *((*current).Next))
-	
-	// fmt.Printf("current: %v\n", )
-	
-	
-	
-	// for current != nil {
-		// paths = append(paths, (*current).Data.Id)
-		// current = current.Next
-	// }
-	
-	// fmt.Printf("paths: %v\n", paths)
-}
-
-func (t *Tree) GetTreeDepth() int {
-	var maxDepth int = 0
-	
-	// for i := 0; i < len(t.NodeBoxs); i++ {
-		// if t.NodeBoxs[i].FirstNode == nil {
-			// continue
-		// }
-		// depth, current := 0, t.NodeBoxs[i].FirstNode
-		
-		// for current != nil {
-			// fmt.Printf("id = %d\n", (*current).Data.Id)
-			// depth = depth + 1
-			// current = current.Next
-		// }
-		
-		// fmt.Printf("current depth: %d\n", depth)
-		
-		// if maxDepth < depth {
-			// maxDepth = depth
-		// }
-	// }
-	
-	return maxDepth
+	return len(t.NodeBoxes) == 0
 }
